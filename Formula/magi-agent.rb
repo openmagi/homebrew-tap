@@ -6,12 +6,15 @@ class MagiAgent < Formula
   url "https://github.com/openmagi/magi-agent/archive/refs/tags/v0.1.1.tar.gz"
   sha256 "42ab7f9b659d6c0ae902f9108efc4be59ba3f62d2cf238effb6897ed3136d6db"
   license "Apache-2.0"
+  revision 1
 
   depends_on "python@3.13"
 
   def install
-    virtualenv = virtualenv_create(libexec, "python3.13")
-    virtualenv.pip_install "#{buildpath}[cli]"
+    virtualenv_create(libexec, "python3.13")
+    system libexec/"bin/python", "-m", "pip", "install", "--disable-pip-version-check", "#{buildpath}[cli]"
+    bin.install_symlink libexec/"bin/magi"
+    bin.install_symlink libexec/"bin/magi-agent"
   end
 
   test do

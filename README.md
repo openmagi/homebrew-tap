@@ -12,4 +12,8 @@ magi --help
 magi-agent --help
 ```
 
+The formula is bottled for supported macOS runners so normal installs do not
+require users to compile from source or install extra developer tooling beyond
+Homebrew's standard dependencies.
+
 The formula is built from the versioned `openmagi/magi-agent` source release.
