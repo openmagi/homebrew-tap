@@ -8,9 +8,9 @@ class MagiAgent < Formula
   license "Apache-2.0"
 
   bottle do
-    root_url "https://github.com/openmagi/homebrew-tap/releases/download/magi-agent-0.1.12"
-    sha256               arm64_tahoe:  "e06ddc314241b48c566fc6f50e1b82e1a63fe9bce5c9c539fd898d4c42558c91"
-    sha256 cellar: :any, x86_64_linux: "f1d07d3efbe4a74ab2dbb2ca65a777b61d9750a790bf6f740f6d1f282b80defe"
+    root_url "https://github.com/openmagi/homebrew-tap/releases/download/magi-agent-0.1.13"
+    sha256               arm64_tahoe:  "08b3894cef18ccba0dac9b6cd9228f417c15eef501712be0fb3e7dbe40263b58"
+    sha256 cellar: :any, x86_64_linux: "891d2dd7cc58326907eb18bc1b2a4e3c7a59a427df072c10f1acb8ef3a74ead1"
   end
 
   depends_on "python@3.13"
