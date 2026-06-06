@@ -6,15 +6,20 @@ class MagiAgent < Formula
   url "https://github.com/openmagi/magi-agent/releases/download/v0.1.15/magi_agent-0.1.15.tar.gz"
   sha256 "37e56fefeddb6e797a46704fa96efd9efbcb0ab2ced5111e23a1781722041c9f"
   license "Apache-2.0"
-
-  bottle do
-    root_url "https://github.com/openmagi/homebrew-tap/releases/download/magi-agent-0.1.15"
-    sha256 cellar: :any, x86_64_linux: "ca2ca598aed228f73a6fdbbe26aba83c30d6df01c697fb225565efb74be174f2"
-  end
+  revision 1
 
   depends_on "python@3.13"
 
+  on_macos do
+    depends_on "rust" => :build
+  end
+
   def install
+    if OS.mac?
+      ENV["PIP_NO_BINARY"] = "jiter"
+      ENV.append "RUSTFLAGS", "-C link-arg=-Wl,-headerpad_max_install_names"
+    end
+
     virtualenv_create(libexec, "python3.13")
     system libexec/"bin/python", "-m", "pip", "install", "--disable-pip-version-check", "#{buildpath}[cli]"
     bin.install_symlink libexec/"bin/magi"
