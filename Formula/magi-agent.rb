@@ -16,7 +16,7 @@ class MagiAgent < Formula
 
   def install
     if OS.mac?
-      ENV["PIP_NO_BINARY"] = "jiter"
+      ENV["PIP_NO_BINARY"] = "jiter,tiktoken"
       ENV.append "RUSTFLAGS", "-C link-arg=-Wl,-headerpad_max_install_names"
     end
 
