@@ -8,11 +8,11 @@ class MagiAgent < Formula
   license "Apache-2.0"
   revision 1
 
+  depends_on "python@3.13"
+
   on_macos do
     depends_on "rust" => :build
   end
-
-  depends_on "python@3.13"
 
   def install
     if OS.mac?
