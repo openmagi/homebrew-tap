@@ -8,12 +8,17 @@ class MagiAgent < Formula
   license "Apache-2.0"
   revision 1
 
-  depends_on "rust" => :build
+  on_macos do
+    depends_on "rust" => :build
+  end
+
   depends_on "python@3.13"
 
   def install
-    ENV["PIP_NO_BINARY"] = "jiter"
-    ENV.append "RUSTFLAGS", "-C link-arg=-Wl,-headerpad_max_install_names"
+    if OS.mac?
+      ENV["PIP_NO_BINARY"] = "jiter"
+      ENV.append "RUSTFLAGS", "-C link-arg=-Wl,-headerpad_max_install_names"
+    end
 
     virtualenv_create(libexec, "python3.13")
     system libexec/"bin/python", "-m", "pip", "install", "--disable-pip-version-check", "#{buildpath}[cli]"
