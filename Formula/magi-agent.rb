@@ -7,6 +7,12 @@ class MagiAgent < Formula
   sha256 "4d19a7167143db8bf7fda18a1871c2a7010e1a22b2234214cec3376e578757a2"
   license "Apache-2.0"
 
+  bottle do
+    root_url "https://github.com/openmagi/homebrew-tap/releases/download/magi-agent-0.1.17"
+    sha256               arm64_tahoe:  "19a8fce07a0e6ba2b5615fb42ab32d16bf6b5f10998ee87fee467e086c75a287"
+    sha256 cellar: :any, x86_64_linux: "2457bc7836a786366465f06fd6754d1b39362a10d129af864ea980009222325c"
+  end
+
   depends_on "python@3.13"
 
   on_macos do
