@@ -3,15 +3,9 @@ class MagiAgent < Formula
 
   desc "Open Magi agent runtime and CLI"
   homepage "https://github.com/openmagi/magi-agent"
-  url "https://github.com/openmagi/magi-agent/releases/download/v0.1.26/magi_agent-0.1.26.tar.gz"
-  sha256 "b513429fabde88ddee8a96c6122edf4e94e8926cd71105567fa735d623e6c984"
+  url "https://github.com/openmagi/magi-agent/releases/download/v0.1.27/magi_agent-0.1.27.tar.gz"
+  sha256 "b11cd2857c248f5e735d8363e310a6600ce01a6c22cfc201b875f047cb2dd9af"
   license "Apache-2.0"
-
-  bottle do
-    root_url "https://github.com/openmagi/homebrew-tap/releases/download/magi-agent-0.1.26"
-    rebuild 1
-    sha256 arm64_tahoe: "4e1e4f302addee2b07d33bac08be0dc2265d641ce89074dcbc75994e5f90548c"
-  end
 
   depends_on "python@3.13"
 
