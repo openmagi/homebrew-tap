@@ -3,8 +3,8 @@ class MagiAgent < Formula
 
   desc "Open Magi agent runtime and CLI"
   homepage "https://github.com/openmagi/magi-agent"
-  url "https://github.com/openmagi/magi-agent/releases/download/v0.1.34/magi_agent-0.1.34.tar.gz"
-  sha256 "94c1a18e72595cdf9945bf84139f67f131bf622bef6df8109eba42d6d8ad6c65"
+  url "https://github.com/openmagi/magi-agent/releases/download/v0.1.36/magi_agent-0.1.36.tar.gz"
+  sha256 "a2c04e3607477ac62be99a90d433b301f512570c8de5431876ab500ffdeb1222"
   license "Apache-2.0"
 
   depends_on "python@3.13"
@@ -20,7 +20,9 @@ class MagiAgent < Formula
     end
 
     virtualenv_create(libexec, "python3.13")
-    system libexec/"bin/python", "-m", "pip", "install", "--disable-pip-version-check", "#{buildpath}[cli]"
+    system libexec/"bin/python", "-m", "pip", "install",
+           "--disable-pip-version-check",
+           "#{buildpath}[browser,cli,composio,providers,waf]"
     bin.install_symlink libexec/"bin/magi"
     bin.install_symlink libexec/"bin/magi-agent"
   end
