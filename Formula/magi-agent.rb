@@ -3,8 +3,8 @@ class MagiAgent < Formula
 
   desc "Open Magi agent runtime and CLI"
   homepage "https://github.com/openmagi/magi-agent"
-  url "https://github.com/openmagi/magi-agent/releases/download/v0.1.38/magi_agent-0.1.38.tar.gz"
-  sha256 "9928d803c336574d34bd31e9ff04600604f4bbb589544eae423f4e10ee96ead4"
+  url "https://github.com/openmagi/magi-agent/releases/download/v0.1.39/magi_agent-0.1.39.tar.gz"
+  sha256 "998e8b614458dac81227615d3bbebe31148fb537f75fe8890df5c1171fef7957"
   license "Apache-2.0"
 
   depends_on "python@3.13"
