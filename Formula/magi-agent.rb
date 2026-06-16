@@ -22,7 +22,7 @@ class MagiAgent < Formula
     virtualenv_create(libexec, "python3.13")
     system libexec/"bin/python", "-m", "pip", "install",
            "--disable-pip-version-check",
-           "#{buildpath}[browser,cli,composio,providers,waf]"
+           "#{buildpath}[browser,cli,composio,providers,vault,waf]"
     bin.install_symlink libexec/"bin/magi"
     bin.install_symlink libexec/"bin/magi-agent"
 
