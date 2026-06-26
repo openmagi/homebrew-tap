@@ -54,6 +54,15 @@ class MagiAgent < Formula
 
       NOTE: this profile enables real model-backed sub-agents and extra
       verification passes — each adds token cost.
+
+      OPTIONAL — faster memory search (qmd):
+        Hipocampus memory search works out of the box on a built-in BM25 index
+        (no extra install). To upgrade to the qmd index, run:
+          magi memory init            # install qmd + index this workspace
+          magi memory init --vector   # also enable semantic search (downloads
+                                      # an embedding model, ~2GB)
+        qmd is NOT a hard dependency; the per-turn recall path always stays on
+        fast BM25. Check status anytime with `magi doctor`.
     EOS
   end
 
