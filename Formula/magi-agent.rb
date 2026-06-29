@@ -6,6 +6,10 @@ class MagiAgent < Formula
   url "https://github.com/openmagi/magi-agent/releases/download/v0.1.90/magi_agent-0.1.90.tar.gz"
   sha256 "4f48b06bcd272cc9031833bbd153cd99a833f2884bc3f580a4e705de983688b6"
   license "Apache-2.0"
+  # Formula-only change: seed the `lab` (experimental, now-default) tier instead
+  # of `full`. No new upstream release, so bump the revision so `brew upgrade`
+  # re-runs install/post_install for existing taps.
+  revision 1
 
   depends_on "python@3.13"
 
@@ -26,11 +30,12 @@ class MagiAgent < Formula
     bin.install_symlink libexec/"bin/magi"
     bin.install_symlink libexec/"bin/magi-agent"
 
-    # Canonical "full-on" install profile. The runtime's install-profile
-    # bootstrap (magi_agent/cli/install_profile_bootstrap.py) reads
-    # ~/.magi/profile.env at CLI startup and setdefaults each MAGI_*/CORE_AGENT_*
-    # flag, so a Homebrew install boots with the full governance/harness profile
-    # on. Shipped into the prefix here; seeded to ~/.magi in post_install.
+    # Canonical "full-on" install profile (the experimental `lab` tier, which is
+    # now the default). The runtime's install-profile bootstrap
+    # (magi_agent/cli/install_profile_bootstrap.py) reads ~/.magi/profile.env at
+    # CLI startup and setdefaults each MAGI_*/CORE_AGENT_* flag, so a Homebrew
+    # install boots with every governance/harness + experimental seam on. Shipped
+    # into the prefix here; seeded to ~/.magi in post_install.
     (pkgshare/"profile.env").write(FULL_ON_PROFILE)
   end
 
@@ -47,7 +52,7 @@ class MagiAgent < Formula
 
   def caveats
     <<~EOS
-      A full-on runtime profile was seeded to:
+      A full-on runtime profile (the experimental `lab` tier) was seeded to:
         ~/.magi/profile.env
       Edit it to tune flags, or delete it to fall back to the default-OFF runtime.
       Set MAGI_RUNTIME_PROFILE=safe (or =eval) to skip the profile for a run.
@@ -94,8 +99,8 @@ class MagiAgent < Formula
     #
     # SEMANTICS PRIMER (why two shapes of "on")
     #   * profile-aware flags (kind="profile_bool", env._runtime_feature_enabled):
-    #     unset => ON in the full profile, OFF under MAGI_RUNTIME_PROFILE=safe/eval.
-    #     Setting MAGI_RUNTIME_PROFILE=full (below) already turns these ON; we ALSO
+    #     unset => ON in the full/lab profile, OFF under MAGI_RUNTIME_PROFILE=safe/eval.
+    #     Setting MAGI_RUNTIME_PROFILE=lab (below) already turns these ON; we ALSO
     #     set each one explicitly so the value is self-documenting and survives any
     #     reader that does not go through the local_defaults setdefault overlay.
     #   * strict opt-in flags (kind="bool", default-OFF): MAGI_RUNTIME_PROFILE NEVER
@@ -121,11 +126,15 @@ class MagiAgent < Formula
     # -----------------------------------------------------------------------------
     # 0. Profile selector
     # -----------------------------------------------------------------------------
-    # "full" is any value NOT in {safe,off,minimal,conservative,eval}; it makes
-    # runtime/local_defaults.apply_local_full_runtime_defaults() apply the
-    # profile-opt-out set and makes every profile_bool flag resolve ON. We keep it
-    # explicit AND list each downstream flag below so nothing is implicit.
-    export MAGI_RUNTIME_PROFILE=full
+    # "lab" is the experimental dogfood tier: the local-full overlay PLUS the
+    # complete experimental flat-flag set (runtime/local_defaults.py
+    # apply_lab_runtime_defaults). It is now the seeded default so a Homebrew
+    # install boots with every governance/harness + experimental seam on. Any
+    # value NOT in {safe,off,minimal,conservative,eval} activates the local-full
+    # overlay; "lab" additionally seeds the experimental flags (see section 16
+    # below, which also pins them explicitly so nothing is implicit). Set
+    # MAGI_RUNTIME_PROFILE=full for the leaner stable tier.
+    export MAGI_RUNTIME_PROFILE=lab
     export MAGI_AGENT_LOCAL_FULL_RUNTIME_DEFAULTS=1
 
 
@@ -318,5 +327,29 @@ class MagiAgent < Formula
     # Route DENIAL is audit metadata; hard-blocking it wedges live turns on a
     # conservative budget estimate, so keep blocking OFF (matches local_defaults).
     export MAGI_RUNNER_POLICY_ROUTE_BLOCKING_ENABLED=0
+
+
+    # -----------------------------------------------------------------------------
+    # 16. lab-tier experimental flags (the delta from the leaner `full` tier)
+    # -----------------------------------------------------------------------------
+    # These are the strict-truthy experimental flags that the lab tier turns on
+    # and `full` leaves off. With MAGI_RUNTIME_PROFILE=lab the runtime overlay
+    # seeds them automatically; we ALSO pin them here so the seed file is explicit
+    # (the "list every flag" philosophy above). Each is fail-open / inert without
+    # its producer or authored rules, so this is safe out of the box. Walk any one
+    # back with MAGI_<FLAG>=0.
+    #   * Kernel pack/role provides (external recipe + role packs).
+    export MAGI_KERNEL_RECIPE_PACKS_ENABLED=1
+    export MAGI_KERNEL_ROLE_PROVIDES_ENABLED=1
+    #   * SHACL determinism verifier + its NL->SHACL compiler (inert without
+    #     pySHACL + authored shapes; fail-open otherwise).
+    export MAGI_SHACL_VERIFIER_ENABLED=1
+    export MAGI_SHACL_COMPILER_ENABLED=1
+    #   * Inspected-source ledger projected into the pre-final evidence gate.
+    export MAGI_SOURCE_LEDGER_EVIDENCE_GATE_ENABLED=1
+    #   * Customize PresetSeam NL-spec authoring endpoints (registration-time).
+    export MAGI_CUSTOMIZE_SEAM_SPEC_ENABLED=1
+    #   * Per-turn tool-evidence JSONL from the serving runner.
+    export MAGI_SERVE_EVIDENCE_ENABLED=1
   PROFILE
 end
